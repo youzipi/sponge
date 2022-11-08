@@ -15,7 +15,7 @@ typedef struct ring_buf {
     int R;
 } * ring;
 
-struct ring_buf *ring_buf_init() {
+struct ring_buf *ring_buf_init(int capacity) {
     auto *ring = static_cast<ring_buf *>(malloc(sizeof(struct ring_buf)));
     ring->W = 0;
     ring->R = 0;
@@ -82,7 +82,7 @@ int ring_buf_get(struct ring_buf *p_ring_buf, int *data) {
 }
 
 int main() {
-    auto *ring_buf = ring_buf_init();
+    auto *ring_buf = ring_buf_init(10);
     for (int i = 0; i < 20; i++) {
         ring_buf_insert(ring_buf, i);
     }

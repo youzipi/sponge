@@ -26,4 +26,4 @@ add_subdirectory ("${PROJECT_SOURCE_DIR}/doctests")
 
 include (etc/tests.cmake)
 
-add_executable(ring_buf ref/ring_buf.cpp)
+add_executable(ring_buf libsponge/ring_buf.cpp)
