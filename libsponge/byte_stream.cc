@@ -8,7 +8,7 @@
 // You will need to add private members to the class declaration in `byte_stream.hh`
 
 template <typename... Targs>
-void DUMMY_CODE(Targs &&... /* unused */) {}
+void DUMMY_CODE(Targs &&.../* unused */) {}
 
 using namespace std;
 
@@ -33,7 +33,13 @@ void ByteStream::pop_output(const size_t len) { DUMMY_CODE(len); }
 //! \returns a string
 std::string ByteStream::read(const size_t len) {
     DUMMY_CODE(len);
-    return {};
+    if (!eof()) {
+        const string &str = peek_output(len);
+        return str;
+    } else {
+        DUMMY_CODE(len);
+        return {};
+    }
 }
 
 void ByteStream::end_input() {}
