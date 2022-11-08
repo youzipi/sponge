@@ -15,11 +15,11 @@ typedef struct ring_buf {
     int R;
 } * ring;
 
-struct ring_buf *ring_buf_init(int capacity) {
-    auto *ring = static_cast<ring_buf *>(malloc(sizeof(struct ring_buf)));
-    ring->W = 0;
-    ring->R = 0;
-    return ring;
+struct ring_buf *ring_buf_init() {
+    auto *_ring = static_cast<ring_buf *>(malloc(sizeof(struct ring_buf)));
+    _ring->W = 0;
+    _ring->R = 0;
+    return _ring;
 }
 
 /**
@@ -61,7 +61,7 @@ int ring_buf_insert(struct ring_buf *p_ring_buf, int data) {
     int idx = p_ring_buf->W % LEN;
     p_ring_buf->array[idx] = data;
     p_ring_buf->W += 1;
-    printf("[insert] data=%d idx=%d, w=%d\n", data, idx, p_ring_buf->W);
+    printf("[write] data=%d idx=%d, w=%d\n", data, idx, p_ring_buf->W);
     return 0;
 }
 
@@ -81,14 +81,14 @@ int ring_buf_get(struct ring_buf *p_ring_buf, int *data) {
     return 0;
 }
 
-int main() {
-    auto *ring_buf = ring_buf_init(10);
-    for (int i = 0; i < 20; i++) {
-        ring_buf_insert(ring_buf, i);
-    }
-    for (int i = 0; i < 20; i++) {
-        int data;
-        ring_buf_get(ring_buf, &data);
-    }
-    return 0;
-}
+//int main() {
+//    auto *ring_buf = ring_buf_init();
+//    for (int i = 0; i < 20; i++) {
+//        ring_buf_insert(ring_buf, i);
+//    }
+//    for (int i = 0; i < 20; i++) {
+//        int data;
+//        ring_buf_get(ring_buf, &data);
+//    }
+//    return 0;
+//}

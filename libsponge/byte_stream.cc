@@ -12,21 +12,21 @@ void DUMMY_CODE(Targs &&.../* unused */) {}
 
 using namespace std;
 
-ByteStream::ByteStream(const size_t capacity) { DUMMY_CODE(capacity); }
+ByteStream::ByteStream(const size_t capacity) : _buf(new ring_buf(capacity)) {}
 
 size_t ByteStream::write(const string &data) {
-    DUMMY_CODE(data);
-    return {};
+    size_t written_cnt = this->_buf->try_write(data);
+    return written_cnt;
 }
 
 //! \param[in] len bytes will be copied from the output side of the buffer
 string ByteStream::peek_output(const size_t len) const {
-    DUMMY_CODE(len);
-    return {};
+    string s = this->_buf->read(len);
+    return s;
 }
 
 //! \param[in] len bytes will be removed from the output side of the buffer
-void ByteStream::pop_output(const size_t len) { DUMMY_CODE(len); }
+void ByteStream::pop_output(const size_t len) { this->_buf->try_remove(len); }
 
 //! Read (i.e., copy and then pop) the next "len" bytes of the stream
 //! \param[in] len bytes will be popped and returned
@@ -42,18 +42,18 @@ std::string ByteStream::read(const size_t len) {
     }
 }
 
-void ByteStream::end_input() {}
+void ByteStream::end_input() { this->_input_ended = true; }
 
-bool ByteStream::input_ended() const { return {}; }
+bool ByteStream::input_ended() const { return this->_input_ended; }
 
-size_t ByteStream::buffer_size() const { return {}; }
+size_t ByteStream::buffer_size() const { return this->_buf->size(); }
 
-bool ByteStream::buffer_empty() const { return {}; }
+bool ByteStream::buffer_empty() const { return this->_buf->is_empty(); }
 
-bool ByteStream::eof() const { return false; }
+bool ByteStream::eof() const { return this->input_ended() && this->buffer_empty(); }
 
-size_t ByteStream::bytes_written() const { return {}; }
+size_t ByteStream::bytes_written() const { return this->_buf->write_total(); }
 
-size_t ByteStream::bytes_read() const { return {}; }
+size_t ByteStream::bytes_read() const { return this->_buf->read_total(); }
 
-size_t ByteStream::remaining_capacity() const { return {}; }
+size_t ByteStream::remaining_capacity() const { return this->_buf->capacity() - this->_buf->size(); }

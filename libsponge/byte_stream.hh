@@ -1,6 +1,8 @@
 #ifndef SPONGE_LIBSPONGE_BYTE_STREAM_HH
 #define SPONGE_LIBSPONGE_BYTE_STREAM_HH
 
+#include "ring_buf.hh"
+
 #include <string>
 
 //! \brief An in-order byte stream.
@@ -11,6 +13,8 @@
 class ByteStream {
   private:
     // Your code here -- add private members as necessary.
+    ring_buf *_buf;
+    bool _input_ended = false;
 
     // Hint: This doesn't need to be a sophisticated data structure at
     // all, but if any of your tests are taking longer than a second,
