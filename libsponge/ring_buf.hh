@@ -18,10 +18,11 @@ class ring_buf {
     bool is_empty();
     size_t write(string data);
     size_t try_write(string data);
-    void try_remove(size_t n);
+    void pop(size_t n);
     //    int remove();
     char get(size_t index);
     string read(size_t n);
+    string peek(size_t n);
     char peek();
     /**
      * 待读取的部分

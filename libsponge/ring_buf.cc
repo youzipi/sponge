@@ -36,15 +36,14 @@ bool ring_buf::is_empty() { return this->size() == 0; }
 size_t ring_buf::try_write(string data) {
     int w_before = this->W;
     for (char c : data) {
-        if (this->W - this->R == this->_capacity) {
+        if ((this->W - this->R) == this->_capacity) {
             break;
         } else {
             // 可以写
             cout << "inserting " << c << " at " << this->W << endl;
-            int w = this->W + 1;
-            int idx = w % this->_capacity;
-            this->array[idx] = c;
-            this->W += w;
+            int arr_idx = this->W % this->_capacity;
+            this->array[arr_idx] = c;
+            this->W += 1;
         }
     }
     int w_after = this->W;
@@ -53,16 +52,16 @@ size_t ring_buf::try_write(string data) {
     return written_cnt;
 }
 
-void ring_buf::try_remove(size_t n) {
+void ring_buf::pop(size_t n) {
     for (size_t i = 0; i < n; i++) {
         if (this->R == this->W) {
             break;
         } else {
-            int r = this->R + 1;
             cout << "removing idx=" << this->R << endl;
-            this->R += r;
+            this->R += 1;
         }
     }
+    cout << "[pop] n=" << n << ", W=" << this->W << ", R=" << this->R << endl;
 }
 
 size_t ring_buf::write(string data) {
@@ -109,6 +108,19 @@ string ring_buf::read(size_t n) {
     return s;
 }
 
+string ring_buf::peek(size_t n) {
+    size_t to_read = n;
+    string s = string();
+    size_t idx = this->R;
+    while ((to_read > 0) && (idx < this->W)) {
+        size_t arr_idx = idx % this->capacity();
+        s.push_back(this->array[arr_idx]);
+        idx += 1;
+        to_read -= 1;
+    }
+    return s;
+}
+
 char ring_buf::peek() {
     if (this->is_empty() == 1) {
         printf("buf is empty\n");
@@ -120,14 +132,14 @@ char ring_buf::peek() {
     return this->array[idx];
 }
 
-//int main() {
-//    ring_buf *buf = new ring_buf(10);
-//    for (size_t i = 0; i < 20; i++) {
-//        buf->write(to_string(i * 10 + i));
-//    }
-//    for (size_t i = 0; i < 20; i++) {
-//        char data = buf->peek();
-//        cout << "data=" << data << endl;
-//    }
-//    return 0;
-//}
+// int main() {
+//     ring_buf *buf = new ring_buf(10);
+//     for (size_t i = 0; i < 20; i++) {
+//         buf->write(to_string(i * 10 + i));
+//     }
+//     for (size_t i = 0; i < 20; i++) {
+//         char data = buf->peek();
+//         cout << "data=" << data << endl;
+//     }
+//     return 0;
+// }
